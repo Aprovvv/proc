@@ -42,7 +42,10 @@ int ass_pop (stack_t* stk, FILE* fp)
     size_t i = 0;
     for (i = 0; i < reg_count; i++)
         if (strcmp(arg_str, reg_list[i]) == 0)
+        {
+            arg_double = i;
             break;
+        }
     if (i == reg_count)
     {
         fprintf_color(stderr, CONSOLE_TEXT_RED, "UNDEFINED REGISTER NAME %s\n", arg_str);

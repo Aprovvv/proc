@@ -16,12 +16,14 @@ int proc_push (spu* proc)
     proc->ip++;
     stack_push (proc->main_stk, proc->code + proc->ip);
 
+    //fprintf(stderr, "here ip = %d\n", proc->ip);
     return 0;
 }
 
 int proc_pop (spu* proc)
 {
     proc->ip++;
+    //fprintf (stderr, "pop in ip = %d\n", proc->ip);
     size_t reg_num = (size_t) proc->code[proc->ip];
     stack_pop (proc->main_stk, &proc->reg[reg_num]);
 

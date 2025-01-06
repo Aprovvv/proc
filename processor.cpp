@@ -21,38 +21,47 @@ int main (int argc, char* argv[])
     }
 
     spu proc = proc_init(argv[1]);
-    spu empty_struct = {};
-    if (memcmp (&proc, &empty_struct, sizeof (spu) == 0))
+    spu empty_struct = {0};
+    if (memcmp (&proc, &empty_struct, sizeof (spu)) == 0)
         return EXIT_FAILURE;
 
     for (proc.ip = 0; proc.ip < proc.code_size; proc.ip++)
+    {
+        //fprintf(stderr, "start ip = %d, code = %.1f\n", proc.ip, proc.code[proc.ip]);
         for (size_t i = 0; i < cmd_count; i++)
         {
-            //fprintf(stderr, "i = %zu; proc.code[i] = %.1f; cmd_list[i].code = %d \n", i, proc.code[i], cmd_list[i].code);
             if ((int)proc.code[proc.ip] == cmd_list[i].code)
             {
                 if (cmd_list[i].proc_func(&proc) != 0)
                 {
-                    break;
+                    goto end;
                 }
+                break;
             }
         }
+        //fprintf(stderr, "end ip = %d, code = %.1f\n", proc.ip, proc.code[proc.ip]);
+    }
+end:
+
+    for (int i = 0; i < 4; i++)
+        fprintf(stderr, "reg[%d] = %f\n", i, proc.reg[i]);
 
     proc_destroy (proc);
 }
 
 static spu proc_init (const char* filename)
 {
+    spu proc = {0};
+
     FILE* fp = fopen (filename, "r");
     if (fp == NULL)
     {
         fprintf_color(stderr, CONSOLE_TEXT_RED, "FAILED TO OPEN INPUT FILE\n");
-        return {};
+        return proc;
     }
     struct stat filedata = {};
     stat (filename, &filedata);
 
-    spu proc = {};
     proc.main_stk = stack_init (sizeof (proc_elem_t), 64);
     proc.funcs_stk = stack_init (sizeof (size_t), 8);
     proc.ram_size = 1024;
