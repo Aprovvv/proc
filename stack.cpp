@@ -164,6 +164,11 @@ void* stack_data (stack_t* stk)
     return stk->data;
 }
 
+size_t stack_size (stack_t* stk)
+{
+    return stk->size;
+}
+
 int stack_push(stack_t* stk, void* p)
 {
     STACK_ASSERT(stk);
