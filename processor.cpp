@@ -27,24 +27,17 @@ int main (int argc, char* argv[])
 
     for (proc.ip = 0; proc.ip < proc.code_size; proc.ip++)
     {
-        //fprintf(stderr, "start ip = %d, code = %.1f\n", proc.ip, proc.code[proc.ip]);
         for (size_t i = 0; i < cmd_count; i++)
         {
             if ((int)proc.code[proc.ip] == cmd_list[i].code)
             {
                 if (cmd_list[i].proc_func(&proc) != 0)
-                {
                     goto end;
-                }
                 break;
             }
         }
-        //fprintf(stderr, "end ip = %d, code = %.1f\n", proc.ip, proc.code[proc.ip]);
     }
 end:
-
-    for (int i = 0; i < 4; i++)
-        fprintf(stderr, "reg[%d] = %f\n", i, proc.reg[i]);
 
     proc_destroy (proc);
 }

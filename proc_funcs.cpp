@@ -16,14 +16,12 @@ int proc_push (spu* proc)
     proc->ip++;
     stack_push (proc->main_stk, proc->code + proc->ip);
 
-    //fprintf(stderr, "here ip = %d\n", proc->ip);
     return 0;
 }
 
 int proc_pop (spu* proc)
 {
     proc->ip++;
-    //fprintf (stderr, "pop in ip = %d\n", proc->ip);
     size_t reg_num = (size_t) proc->code[proc->ip];
     stack_pop (proc->main_stk, &proc->reg[reg_num]);
 
@@ -44,6 +42,49 @@ int proc_in (spu* proc)
     proc_elem_t val = 0;
     scanf("%lf", &val);
     stack_push(proc->main_stk, &val);
+
+    return 0;
+}
+
+int proc_sum (spu* proc)
+{
+    proc_elem_t a = 0, b = 0;
+    stack_pop (proc->main_stk, &a);
+    stack_pop (proc->main_stk, &b);
+    a = b + a;
+    stack_push(proc->main_stk, &a);
+
+    return 0;
+}
+
+int proc_sub (spu* proc)
+{
+    proc_elem_t a = 0, b = 0;
+    stack_pop (proc->main_stk, &a);
+    stack_pop (proc->main_stk, &b);
+    a = b - a;
+    stack_push(proc->main_stk, &a);
+
+    return 0;
+}
+int proc_mult (spu* proc)
+{
+    proc_elem_t a = 0, b = 0;
+    stack_pop (proc->main_stk, &a);
+    stack_pop (proc->main_stk, &b);
+    a = b * a;
+    stack_push(proc->main_stk, &a);
+
+    return 0;
+}
+
+int proc_div (spu* proc)
+{
+    proc_elem_t a = 0, b = 0;
+    stack_pop (proc->main_stk, &a);
+    stack_pop (proc->main_stk, &b);
+    a = b / a;
+    stack_push(proc->main_stk, &a);
 
     return 0;
 }

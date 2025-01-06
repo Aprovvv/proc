@@ -72,6 +72,38 @@ int ass_in (stack_t* stk, FILE* fp)
     return 0;
 }
 
+int ass_sum (stack_t* stk, FILE* fp)
+{
+    proc_elem_t sum = CMD_CODE_SUM;
+    stack_push(stk, &sum);
+
+    return 0;
+}
+
+int ass_sub (stack_t* stk, FILE* fp)
+{
+    proc_elem_t sub = CMD_CODE_SUB;
+    stack_push(stk, &sub);
+
+    return 0;
+}
+
+int ass_mult (stack_t* stk, FILE* fp)
+{
+    proc_elem_t mult = CMD_CODE_MULT;
+    stack_push(stk, &mult);
+
+    return 0;
+}
+
+int ass_div (stack_t* stk, FILE* fp)
+{
+    proc_elem_t div = CMD_CODE_DIV;
+    stack_push(stk, &div);
+
+    return 0;
+}
+
 int read_until_space (FILE* fp, char* dest, size_t n)
 {
     size_t i = 0;
