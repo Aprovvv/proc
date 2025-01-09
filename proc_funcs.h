@@ -21,5 +21,7 @@ int proc_jb   (spu* proc);
 int proc_jbe  (spu* proc);
 int proc_je   (spu* proc);
 int proc_jme  (spu* proc);
+int proc_sqrt (spu* proc);
+int proc_sin  (spu* proc);
 
 #endif

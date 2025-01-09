@@ -38,6 +38,8 @@ enum COMMAND_CODES
     CMD_CODE_JBE,
     CMD_CODE_JE,
     CMD_CODE_JME,
+    CMD_CODE_SQRT,
+    CMD_CODE_SIN,
 };
 
 struct command {

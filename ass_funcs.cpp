@@ -200,6 +200,22 @@ int ass_jme (stack_t* stk, FILE* fp, stack_t* lbl_stk)
     return 0;
 }
 
+int ass_sqrt (stack_t* stk, FILE* fp, stack_t* lbl_stk)
+{
+    proc_elem_t code = CMD_CODE_SQRT;
+    stack_push (stk, &code);
+
+    return 0;
+}
+
+int ass_sin (stack_t* stk, FILE* fp, stack_t* lbl_stk)
+{
+    proc_elem_t code = CMD_CODE_SIN;
+    stack_push (stk, &code);
+
+    return 0;
+}
+
 int read_until_space (FILE* fp, char* dest, size_t n)
 {
     size_t i = 0;

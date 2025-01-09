@@ -28,7 +28,7 @@ int main (int argc, char* argv[])
         exit(EXIT_FAILURE);
     }
 
-    freopen ("errors.txt", "w", stderr);
+    freopen ("log.txt", "w", stderr);
 
     spu proc = proc_init(argv[1]);
     spu empty_struct = {0};

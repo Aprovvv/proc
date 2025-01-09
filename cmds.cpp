@@ -23,6 +23,8 @@ extern const command cmd_list[] =
     DEFCMD(jbe, CMD_CODE_JBE),
     DEFCMD(je, CMD_CODE_JE),
     DEFCMD(jme, CMD_CODE_JME),
+    DEFCMD(sqrt, CMD_CODE_SQRT),
+    DEFCMD(sin, CMD_CODE_SIN),
 };
 
 extern const size_t cmd_count = sizeof(cmd_list) / sizeof(cmd_list[0]);
