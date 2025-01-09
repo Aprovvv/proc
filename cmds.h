@@ -31,7 +31,13 @@ enum COMMAND_CODES
     CMD_CODE_MULT,
     CMD_CODE_DIV,
     CMD_CODE_LBL,
-    CMD_CODE_JMP
+    CMD_CODE_JMP,
+    CMD_CODE_JA,
+    CMD_CODE_JAE,
+    CMD_CODE_JB,
+    CMD_CODE_JBE,
+    CMD_CODE_JE,
+    CMD_CODE_JME,
 };
 
 struct command {

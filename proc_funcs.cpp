@@ -6,6 +6,14 @@
 #include "stack.h"
 #include "color_print/color_print.h"
 
+static int pr_double (const void* a);
+static int dblcmp (proc_elem_t a, proc_elem_t b);
+
+static int pr_double (const void* p)
+{
+    return fprintf (stderr, "%f", *((const double*)p));
+}
+
 int proc_hlt (spu* proc)
 {
     return 1;
@@ -97,6 +105,88 @@ int proc_lbl (spu* proc)
 int proc_jmp (spu* proc)
 {
     proc->ip++;
-    proc->ip = proc->code[proc->ip];
+    proc->ip = (size_t)proc->code[proc->ip];
     return 0;
+}
+
+int proc_jae (spu* proc)
+{
+    proc_elem_t a = 0, b = 0;
+    stack_pop (proc->main_stk, &b);
+    stack_pop (proc->main_stk, &a);
+    proc->ip++;
+    if (a >= b)
+        proc->ip = (size_t)proc->code[proc->ip];
+
+    return 0;
+}
+
+int proc_ja (spu* proc)
+{
+    proc_elem_t a = 0, b = 0;
+    stack_pop (proc->main_stk, &b);
+    stack_pop (proc->main_stk, &a);
+    proc->ip++;
+    if (a > b)
+        proc->ip = (size_t)proc->code[proc->ip];
+
+    return 0;
+}
+
+int proc_jb (spu* proc)
+{
+    proc_elem_t a = 0, b = 0;
+    stack_pop (proc->main_stk, &b);
+    stack_pop (proc->main_stk, &a);
+    proc->ip++;
+    if (a < b)
+        proc->ip = (size_t)proc->code[proc->ip];
+
+    return 0;
+}
+
+int proc_jbe (spu* proc)
+{
+    proc_elem_t a = 0, b = 0;
+    stack_pop (proc->main_stk, &b);
+    stack_pop (proc->main_stk, &a);
+    proc->ip++;
+    if (a <= b)
+        proc->ip = (size_t)proc->code[proc->ip];
+
+    return 0;
+}
+
+int proc_je (spu* proc)
+{
+    proc_elem_t a = 0, b = 0;
+    stack_pop (proc->main_stk, &b);
+    stack_pop (proc->main_stk, &a);
+    proc->ip++;
+    if (a == b)
+        proc->ip = (size_t)proc->code[proc->ip];
+
+    return 0;
+}
+
+int proc_jme (spu* proc)
+{
+    proc_elem_t a = 0, b = 0;
+    stack_pop (proc->main_stk, &b);
+    stack_pop (proc->main_stk, &a);
+    proc->ip++;
+    if (a != b)
+        proc->ip = (size_t)proc->code[proc->ip];
+
+    return 0;
+}
+
+static int dblcmp (proc_elem_t a, proc_elem_t b)
+{
+    const double EPS = 10e-8;
+    if (abs (a - b) < EPS)
+        return 0;
+    if (a > b)
+        return 1;
+    return -1;
 }

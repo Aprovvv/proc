@@ -3,6 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <sys/stat.h>
+#include <assert.h>
 
 #include "proc_funcs.h"
 #include "cmds.h"
@@ -12,18 +13,27 @@
 static spu proc_init (const char* filename);
 static void proc_destroy (spu proc);
 
+static int pr_double (const void* a);
+
+static int pr_double (const void* p)
+{
+    return fprintf (stderr, "%f", *((const double*)p));
+}
+
 int main (int argc, char* argv[])
 {
     if (argc < 2)
     {
         fprintf_color(stderr, CONSOLE_TEXT_RED, "FILE NAME NOT SPECIFIED\n");
-        return EXIT_FAILURE;
+        exit(EXIT_FAILURE);
     }
+
+    freopen ("errors.txt", "w", stderr);
 
     spu proc = proc_init(argv[1]);
     spu empty_struct = {0};
     if (memcmp (&proc, &empty_struct, sizeof (spu)) == 0)
-        return EXIT_FAILURE;
+        exit(EXIT_FAILURE);
 
     for (proc.ip = 0; proc.ip < proc.code_size; proc.ip++)
     {
@@ -38,7 +48,6 @@ int main (int argc, char* argv[])
         }
     }
 end:
-
     proc_destroy (proc);
 }
 
@@ -55,7 +64,7 @@ static spu proc_init (const char* filename)
     struct stat filedata = {};
     stat (filename, &filedata);
 
-    proc.main_stk = stack_init (sizeof (proc_elem_t), 64);
+    proc.main_stk = stack_init (sizeof (proc_elem_t), 20);
     proc.funcs_stk = stack_init (sizeof (size_t), 8);
     proc.ram_size = 1024;
     proc.ram = (proc_elem_t*) calloc (sizeof (proc_elem_t), proc.ram_size);

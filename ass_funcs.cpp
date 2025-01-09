@@ -122,6 +122,84 @@ int ass_jmp (stack_t* stk, FILE* fp, stack_t* lbl_stk)
     return 0;
 }
 
+int ass_ja (stack_t* stk, FILE* fp, stack_t* lbl_stk)
+{
+    label l = {"", stack_size (stk) + 1};
+    read_until_space (fp, l.name, CMD_LEN);
+    stack_push (lbl_stk, &l);
+
+    proc_elem_t jmp = CMD_CODE_JA, minus_1 = -1;
+    stack_push (stk, &jmp);
+    stack_push (stk, &minus_1);
+
+    return 0;
+}
+
+int ass_jae (stack_t* stk, FILE* fp, stack_t* lbl_stk)
+{
+    label l = {"", stack_size (stk) + 1};
+    read_until_space (fp, l.name, CMD_LEN);
+    stack_push (lbl_stk, &l);
+
+    proc_elem_t jmp = CMD_CODE_JAE, minus_1 = -1;
+    stack_push (stk, &jmp);
+    stack_push (stk, &minus_1);
+
+    return 0;
+}
+
+int ass_jb (stack_t* stk, FILE* fp, stack_t* lbl_stk)
+{
+    label l = {"", stack_size (stk) + 1};
+    read_until_space (fp, l.name, CMD_LEN);
+    stack_push (lbl_stk, &l);
+
+    proc_elem_t jmp = CMD_CODE_JB, minus_1 = -1;
+    stack_push (stk, &jmp);
+    stack_push (stk, &minus_1);
+
+    return 0;
+}
+
+int ass_jbe (stack_t* stk, FILE* fp, stack_t* lbl_stk)
+{
+    label l = {"", stack_size (stk) + 1};
+    read_until_space (fp, l.name, CMD_LEN);
+    stack_push (lbl_stk, &l);
+
+    proc_elem_t jmp = CMD_CODE_JBE, minus_1 = -1;
+    stack_push (stk, &jmp);
+    stack_push (stk, &minus_1);
+
+    return 0;
+}
+
+int ass_je (stack_t* stk, FILE* fp, stack_t* lbl_stk)
+{
+    label l = {"", stack_size (stk) + 1};
+    read_until_space (fp, l.name, CMD_LEN);
+    stack_push (lbl_stk, &l);
+
+    proc_elem_t jmp = CMD_CODE_JE, minus_1 = -1;
+    stack_push (stk, &jmp);
+    stack_push (stk, &minus_1);
+
+    return 0;
+}
+
+int ass_jme (stack_t* stk, FILE* fp, stack_t* lbl_stk)
+{
+    label l = {"", stack_size (stk) + 1};
+    read_until_space (fp, l.name, CMD_LEN);
+    stack_push (lbl_stk, &l);
+
+    proc_elem_t jmp = CMD_CODE_JME, minus_1 = -1;
+    stack_push (stk, &jmp);
+    stack_push (stk, &minus_1);
+
+    return 0;
+}
+
 int read_until_space (FILE* fp, char* dest, size_t n)
 {
     size_t i = 0;

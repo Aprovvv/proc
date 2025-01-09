@@ -307,30 +307,30 @@ static void stack_assert(const struct stack_t* stk,
     case STK_NULL:
         fprintf_color(stderr, CONSOLE_TEXT_RED,
                       "ERROR: stk is a null pointer\n");
-        abort();
+        exit(EXIT_FAILURE);
     case STK_DATA_NULL:
         fprintf_color(stderr, CONSOLE_TEXT_RED,
                       "ERROR: stk->data is a null pointer\n");
-        abort();
+        exit(EXIT_FAILURE);
     case CAPAC_LESS_SIZE:
         fprintf_color(stderr, CONSOLE_TEXT_RED,
                       "ERROR: capacity < size\n");
-        abort();
+        exit(EXIT_FAILURE);
     case LEFT_STR_CANARY:
         fprintf_color(stderr, CONSOLE_TEXT_RED,
                       "ERROR: left_str_canary = %lX\n",
                       stk->left_str_protect);
-        abort();
+        exit(EXIT_FAILURE);
     case RIGHT_STR_CANARY:
         fprintf_color(stderr, CONSOLE_TEXT_RED,
                       "ERROR: right_str_canary = %lX\n",
                       stk->right_str_protect);
-        abort();
+        exit(EXIT_FAILURE);
     case LEFT_DATA_CANARY:
         fprintf_color(stderr, CONSOLE_TEXT_RED,
                       "ERROR: left_data_canary = %lX\n",
                       *((canary_t*)stk->data - 1));
-        abort();
+        exit(EXIT_FAILURE);
     case RIGHT_DATA_CANARY:
         memcpy(&curr_canary,
               (char*)stk->data +
@@ -339,18 +339,18 @@ static void stack_assert(const struct stack_t* stk,
         fprintf_color(stderr, CONSOLE_TEXT_RED,
                       "ERROR: right_data_canary = %lX\n",
                       curr_canary);
-        abort();
+        exit(EXIT_FAILURE);
     case STR_HASH:
         fprintf_color(stderr, CONSOLE_TEXT_RED,
                       "ERROR: str_hash has wrong value\n");
-        abort();
+        exit(EXIT_FAILURE);
     case DATA_HASH:
         fprintf_color(stderr, CONSOLE_TEXT_RED,
                       "ERROR: data_hash has wrong value\n");
-        abort();
+        exit(EXIT_FAILURE);
     default:
         fprintf_color(stderr, CONSOLE_TEXT_RED, "UNDEFINED ERROR\n");
-        abort();
+        exit(EXIT_FAILURE);
     }
 }
 

@@ -19,6 +19,12 @@ DEF_ASS_FUNC (mult);
 DEF_ASS_FUNC (div);
 DEF_ASS_FUNC (lbl);
 DEF_ASS_FUNC (jmp);
+DEF_ASS_FUNC (ja);
+DEF_ASS_FUNC (jae);
+DEF_ASS_FUNC (jb);
+DEF_ASS_FUNC (jbe);
+DEF_ASS_FUNC (je);
+DEF_ASS_FUNC (jme);
 
 int read_until_space (FILE* fp, char* dest, size_t n);
 
