@@ -5,16 +5,26 @@
 #include "stack.h"
 
 #define CMD_LEN 32
+#define DEF_ASS_FUNC(name) int ass_##name \
+    (stack_t* stk, FILE* fp, stack_t* lbl_stk)
 
-int ass_hlt (stack_t* stk, FILE* fp);
-int ass_push (stack_t* stk, FILE* fp);
-int ass_pop (stack_t* stk, FILE* fp);
-int ass_out (stack_t* stk, FILE* fp);
-int ass_in (stack_t* stk, FILE* fp);
-int ass_sum (stack_t* stk, FILE* fp);
-int ass_sub (stack_t* stk, FILE* fp);
-int ass_mult (stack_t* stk, FILE* fp);
-int ass_div (stack_t* stk, FILE* fp);
+DEF_ASS_FUNC (hlt);
+DEF_ASS_FUNC (push);
+DEF_ASS_FUNC (pop);
+DEF_ASS_FUNC (out);
+DEF_ASS_FUNC (in);
+DEF_ASS_FUNC (sum);
+DEF_ASS_FUNC (sub);
+DEF_ASS_FUNC (mult);
+DEF_ASS_FUNC (div);
+DEF_ASS_FUNC (lbl);
+DEF_ASS_FUNC (jmp);
 
 int read_until_space (FILE* fp, char* dest, size_t n);
+
+struct label
+{
+    char name[CMD_LEN];
+    size_t ip;
+};
 #endif

@@ -8,14 +8,14 @@
 #include "stack.h"
 #include "color_print/color_print.h"
 
-int ass_hlt (stack_t* stk, FILE* fp)
+int ass_hlt (stack_t* stk, FILE* fp, stack_t* lbl_stk)
 {
     proc_elem_t hlt = CMD_CODE_HLT;
     stack_push (stk, &hlt);
     return 0;
 }
 
-int ass_push (stack_t* stk, FILE* fp)
+int ass_push (stack_t* stk, FILE* fp, stack_t* lbl_stk)
 {
     proc_elem_t push = CMD_CODE_PUSH;
     stack_push (stk, &push);
@@ -30,7 +30,7 @@ int ass_push (stack_t* stk, FILE* fp)
     return 0;
 }
 
-int ass_pop (stack_t* stk, FILE* fp)
+int ass_pop (stack_t* stk, FILE* fp, stack_t* lbl_stk)
 {
     proc_elem_t pop = CMD_CODE_POP;
     stack_push (stk, &pop);
@@ -56,7 +56,7 @@ int ass_pop (stack_t* stk, FILE* fp)
     return 0;
 }
 
-int ass_out (stack_t* stk, FILE* fp)
+int ass_out (stack_t* stk, FILE* fp, stack_t* lbl_stk)
 {
     proc_elem_t out = CMD_CODE_OUT;
     stack_push (stk, &out);
@@ -64,7 +64,7 @@ int ass_out (stack_t* stk, FILE* fp)
     return 0;
 }
 
-int ass_in (stack_t* stk, FILE* fp)
+int ass_in (stack_t* stk, FILE* fp, stack_t* lbl_stk)
 {
     proc_elem_t in = CMD_CODE_IN;
     stack_push (stk, &in);
@@ -72,7 +72,7 @@ int ass_in (stack_t* stk, FILE* fp)
     return 0;
 }
 
-int ass_sum (stack_t* stk, FILE* fp)
+int ass_sum (stack_t* stk, FILE* fp, stack_t* lbl_stk)
 {
     proc_elem_t sum = CMD_CODE_SUM;
     stack_push(stk, &sum);
@@ -80,7 +80,7 @@ int ass_sum (stack_t* stk, FILE* fp)
     return 0;
 }
 
-int ass_sub (stack_t* stk, FILE* fp)
+int ass_sub (stack_t* stk, FILE* fp, stack_t* lbl_stk)
 {
     proc_elem_t sub = CMD_CODE_SUB;
     stack_push(stk, &sub);
@@ -88,7 +88,7 @@ int ass_sub (stack_t* stk, FILE* fp)
     return 0;
 }
 
-int ass_mult (stack_t* stk, FILE* fp)
+int ass_mult (stack_t* stk, FILE* fp, stack_t* lbl_stk)
 {
     proc_elem_t mult = CMD_CODE_MULT;
     stack_push(stk, &mult);
@@ -96,10 +96,28 @@ int ass_mult (stack_t* stk, FILE* fp)
     return 0;
 }
 
-int ass_div (stack_t* stk, FILE* fp)
+int ass_div (stack_t* stk, FILE* fp, stack_t* lbl_stk)
 {
     proc_elem_t div = CMD_CODE_DIV;
     stack_push(stk, &div);
+
+    return 0;
+}
+
+int ass_lbl (stack_t* stk, FILE* fp, stack_t* lbl_stk)
+{
+    return 0;
+}
+
+int ass_jmp (stack_t* stk, FILE* fp, stack_t* lbl_stk)
+{
+    label l = {"", stack_size (stk) + 1};
+    read_until_space (fp, l.name, CMD_LEN);
+    stack_push (lbl_stk, &l);
+
+    proc_elem_t jmp = CMD_CODE_JMP, minus_1 = -1;
+    stack_push (stk, &jmp);
+    stack_push (stk, &minus_1);
 
     return 0;
 }

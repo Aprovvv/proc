@@ -88,3 +88,15 @@ int proc_div (spu* proc)
 
     return 0;
 }
+
+int proc_lbl (spu* proc)
+{
+    return 0;
+}
+
+int proc_jmp (spu* proc)
+{
+    proc->ip++;
+    proc->ip = proc->code[proc->ip];
+    return 0;
+}

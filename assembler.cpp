@@ -8,7 +8,9 @@
 #include "stack.h"
 #include "color_print/color_print.h"
 
-int pr (const void* a);
+int pr_double (const void* a);
+int pr_lbl (const void* a);
+int run_ass (stack_t* cmd_stk, FILE* fp);
 
 int main (int argc, char* argv[])
 {
@@ -25,21 +27,10 @@ int main (int argc, char* argv[])
     }
 
     stack_t* cmd_stk = stack_init (sizeof(proc_elem_t), 10);
-    char cmd[CMD_LEN] = "";
+    if (run_ass (cmd_stk, fp) == EXIT_FAILURE)
+        return EXIT_FAILURE;
 
-    while (read_until_space (fp, cmd, CMD_LEN) != EOF)
-    {
-        for (size_t i = 0; i < cmd_count; i++)
-        {
-            if (strcmp(cmd, cmd_list[i].name) == 0)
-            {
-                cmd_list[i].ass_func(cmd_stk, fp);
-                continue;
-            }
-        }
-    }
-
-    stack_printf (cmd_stk, pr);
+    //stack_printf (cmd_stk, pr_double);
     void* ptr = stack_data (cmd_stk);
     FILE* fout = fopen ("src.bin", "wb");
     if (fout == NULL)
@@ -53,7 +44,87 @@ int main (int argc, char* argv[])
     stack_destroy (cmd_stk);
 }
 
-int pr (const void* a)
+int run_ass (stack_t* cmd_stk, FILE* fp)
 {
-    return fprintf(stderr, "%f", *((const proc_elem_t*)a));
+    char cmd[CMD_LEN] = "";
+    stack_t* lbl_stk = stack_init (sizeof (label), 4);
+    stack_t* defined_lbl_stk = stack_init (sizeof (label), 4);
+
+    while (read_until_space (fp, cmd, CMD_LEN) != EOF)
+    {
+        //1 проход
+        size_t i = 0;
+        for (i = 0; i < cmd_count; i++)
+        {
+            if (strcmp(cmd, cmd_list[i].name) == 0)
+            {
+                cmd_list[i].ass_func(cmd_stk, fp, lbl_stk);
+                break;
+            }
+        }
+        if (i == cmd_count)
+        {
+            if (cmd[strlen(cmd) - 1] == ':')
+            {
+                label l = {"", stack_size (cmd_stk)};
+                strncpy (l.name, cmd, strlen(cmd) - 1);
+                proc_elem_t lbl_code = CMD_CODE_LBL;
+                stack_push (cmd_stk, &lbl_code);//TODO: а может убрать метку из машинного кода?
+                stack_push (defined_lbl_stk, &l);
+            }
+            else
+            {
+                fprintf_color (stderr, CONSOLE_TEXT_RED, "UNDEFINED COMMAND: %s\n", cmd);
+                stack_destroy (defined_lbl_stk);
+                stack_destroy (lbl_stk);
+                stack_destroy (cmd_stk);
+                return EXIT_FAILURE;
+            }
+        }
+    }
+    /*stack_printf (cmd_stk, pr_double);
+    stack_printf (lbl_stk, pr_lbl);
+    stack_printf (defined_lbl_stk, pr_lbl);*/
+    //проставляем адреса в джампах
+    size_t jmp_count = stack_size (lbl_stk);
+    size_t lbl_count = stack_size (defined_lbl_stk);
+    label* lbl_ptr = (label*) stack_data (defined_lbl_stk);
+    proc_elem_t* cmd_ptr = (proc_elem_t*) stack_data (cmd_stk);
+    for (size_t j = 0; j < jmp_count; j++)
+    {
+        label lbl = {};
+        stack_pop (lbl_stk, &lbl);
+        size_t i = 0;
+        for (i = 0; i < lbl_count; i++)
+        {
+            if (strcmp (lbl.name, lbl_ptr[i].name) == 0)
+            {
+                cmd_ptr[lbl.ip] = (proc_elem_t) lbl_ptr[i].ip;
+                break;
+            }
+        }
+        if (i == lbl_count)
+        {
+            fprintf_color (stderr, CONSOLE_TEXT_RED, "UNDEFINED LABEL: %s\n", lbl.name);
+            stack_destroy (defined_lbl_stk);
+            stack_destroy (lbl_stk);
+            stack_destroy (cmd_stk);
+            return EXIT_FAILURE;
+        }
+    }
+
+    stack_destroy (defined_lbl_stk);
+    stack_destroy (lbl_stk);
+    return 0;
+}
+
+int pr_double (const void* p)
+{
+    return fprintf (stderr, "%f", *((const double*)p));
+}
+
+int pr_lbl (const void* a)
+{
+    const label* l = (const label*) a;
+    return fprintf(stderr, "%s %zu", l->name, l->ip);
 }

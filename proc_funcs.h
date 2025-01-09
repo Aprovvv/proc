@@ -13,5 +13,7 @@ int proc_sum (spu* proc);
 int proc_sub (spu* proc);
 int proc_mult (spu* proc);
 int proc_div (spu* proc);
+int proc_lbl (spu* proc);
+int proc_jmp (spu* proc);
 
 #endif

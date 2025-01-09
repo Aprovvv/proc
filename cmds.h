@@ -30,11 +30,15 @@ enum COMMAND_CODES
     CMD_CODE_SUB,
     CMD_CODE_MULT,
     CMD_CODE_DIV,
+    CMD_CODE_LBL,
+    CMD_CODE_JMP
 };
 
 struct command {
     const char* name;
-    int (*ass_func) (stack_t* stk, FILE* fp);
+    int (*ass_func) (stack_t* stk,
+                     FILE* fp,
+                     stack_t* lbl_stk);
     int (*proc_func) (spu* proc);
     int code;
 };
