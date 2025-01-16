@@ -27,6 +27,7 @@ DEF_ASS_FUNC (je);
 DEF_ASS_FUNC (jme);
 DEF_ASS_FUNC (sqrt);
 DEF_ASS_FUNC (sin);
+DEF_ASS_FUNC (draw);
 
 int read_until_space (FILE* fp, char* dest, size_t n);
 

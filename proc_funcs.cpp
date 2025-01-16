@@ -22,17 +22,63 @@ int proc_hlt (spu* proc)
 
 int proc_push (spu* proc)
 {
-    proc->ip++;
-    stack_push (proc->main_stk, proc->code + proc->ip);
+    int type = (int) proc->code [++proc->ip];
+    proc_elem_t val = 0;
+    if (type & MASK_NUM)
+        val = proc->code [++proc->ip];
+    if (type & MASK_REG)
+    {
+        int reg_num = 0;
+        reg_num = (int) proc->code [++proc->ip];
+        if (type & MASK_PLUS)
+            val += proc->reg [reg_num];
+        if (type & MASK_MINUS)
+            val -= proc->reg [reg_num];
+        if (type & MASK_STAR)
+            val *= proc->reg [reg_num];
+        if (!(type & MASK_NUM))
+            val = proc->reg [reg_num];
+    }
+
+    if (type & MASK_MEM)
+        stack_push (proc->main_stk, &proc->ram[(size_t) val]);
+    else
+        stack_push (proc->main_stk, &val);
 
     return 0;
 }
 
 int proc_pop (spu* proc)
 {
-    proc->ip++;
-    size_t reg_num = (size_t) proc->code[proc->ip];
-    stack_pop (proc->main_stk, &proc->reg[reg_num]);
+    int type = (int) proc->code [++proc->ip];
+    size_t val = 0;
+    if (type & MASK_MEM)
+    {
+        if (type & MASK_NUM)
+            val = (size_t) proc->code [++proc->ip];
+        if (type & MASK_REG)
+        {
+            int reg_num = 0;
+            reg_num = (int) proc->code [++proc->ip];
+            if (type & MASK_PLUS)
+                val += (size_t) proc->reg [reg_num];
+            if (type & MASK_MINUS)
+                val -= (size_t) proc->reg [reg_num];
+            if (type & MASK_STAR)
+                val = (size_t) (val * proc->reg [reg_num]);
+            if (!(type & MASK_NUM))
+                val = (size_t) proc->reg [reg_num];
+        }
+    }
+    else
+    {
+        val = (size_t) proc->code [++proc->ip];
+    }
+
+    if (type & MASK_MEM)
+        stack_pop (proc->main_stk, &proc->ram[val]);
+    else
+        stack_pop (proc->main_stk, &proc->reg[val]);
 
     return 0;
 }
@@ -198,6 +244,21 @@ int proc_sin (spu* proc)
     stack_pop (proc->main_stk, &val);
     val = sin (val);
     stack_push (proc->main_stk, &val);
+
+    return 0;
+}
+
+int proc_draw (spu* proc)
+{
+    for (int y = 0; y < 32; y++)
+    {
+        for (int x = 0; x < 32; x++)
+        {
+            fputc((int)proc->ram[32*y + x], stdout);
+            fputc(' ', stdout);
+        }
+        fputc('\n', stdout);
+    }
 
     return 0;
 }

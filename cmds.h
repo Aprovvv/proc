@@ -40,6 +40,18 @@ enum COMMAND_CODES
     CMD_CODE_JME,
     CMD_CODE_SQRT,
     CMD_CODE_SIN,
+    CMD_CODE_DRAW
+};
+
+enum PUSH_MASKS
+{
+    MASK_NUM       = 0x1,
+    MASK_REG       = 0x2,
+    MASK_PLUS      = 0x4,
+    MASK_MINUS     = 0x8,
+    MASK_STAR      = 0x10,
+    MASK_MEM       = 0x20,
+    MASK_REG_MEM   = 0x40,
 };
 
 struct command {
