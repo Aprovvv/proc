@@ -8,8 +8,6 @@
 #include "stack.h"
 #include "color_print/color_print.h"
 
-int pr_double (const void* a);
-int pr_lbl (const void* a);
 int run_ass (stack_t* cmd_stk, FILE* fp);
 
 int main (int argc, char* argv[])
@@ -123,15 +121,4 @@ int run_ass (stack_t* cmd_stk, FILE* fp)
     stack_destroy (defined_lbl_stk);
     stack_destroy (lbl_stk);
     return 0;
-}
-
-int pr_double (const void* p)
-{
-    return fprintf (stderr, "%f", *((const double*)p));
-}
-
-int pr_lbl (const void* a)
-{
-    const label* l = (const label*) a;
-    return fprintf(stderr, "%s %zu", l->name, l->ip);
 }

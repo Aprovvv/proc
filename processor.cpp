@@ -13,13 +13,6 @@
 static spu proc_init (const char* filename);
 static void proc_destroy (spu proc);
 
-static int pr_double (const void* a);
-
-static int pr_double (const void* p)
-{
-    return fprintf (stderr, "%f", *((const double*)p));
-}
-
 int main (int argc, char* argv[])
 {
     if (argc < 2)

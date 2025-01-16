@@ -7,19 +7,7 @@
 #include "stack.h"
 #include "color_print/color_print.h"
 
-static int pr_double (const void* a);
-static int pr_size_t (const void* a);
 static int dblcmp (proc_elem_t a, proc_elem_t b);
-
-static int pr_double (const void* p)
-{
-    return fprintf (stderr, "%f", *((const double*)p));
-}
-
-static int pr_size_t (const void* p)
-{
-    return fprintf (stderr, "%zu", *((const size_t*)p));
-}
 
 int proc_hlt (spu* proc)
 {
