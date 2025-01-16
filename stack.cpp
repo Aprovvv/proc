@@ -104,7 +104,9 @@ struct stack_t* stack_init(size_t elem_size, size_t start_capacity)
 
 int stack_destroy(stack_t* stk)
 {
+#ifndef NDEBUG
     free((canary_t*)stk->data - 1);
+#endif
     free(stk);
     return 0;
 }

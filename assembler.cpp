@@ -14,11 +14,22 @@ int run_ass (stack_t* cmd_stk, FILE* fp);
 
 int main (int argc, char* argv[])
 {
+    const char* output_name = "src.bin";
     if (argc < 2)
     {
         fprintf_color(stderr, CONSOLE_TEXT_RED, "FILE NAME NOT SPECIFIED\n");
         return EXIT_FAILURE;
     }
+    if (argc == 4)
+    {
+        if (strcmp (argv[2], "-o") != 0)
+        {
+            fprintf_color(stderr, CONSOLE_TEXT_RED, "UNDEFINED FLAG %s\n", argv[2]);
+            return EXIT_FAILURE;
+        }
+        output_name = argv[3];
+    }
+
     FILE* fp = fopen (argv[1], "r");
     if (fp == NULL)
     {
@@ -30,9 +41,8 @@ int main (int argc, char* argv[])
     if (run_ass (cmd_stk, fp) == EXIT_FAILURE)
         return EXIT_FAILURE;
 
-    //stack_printf (cmd_stk, pr_double);
     void* ptr = stack_data (cmd_stk);
-    FILE* fout = fopen ("src.bin", "wb");
+    FILE* fout = fopen (output_name, "wb");
     if (fout == NULL)
     {
         fprintf_color(stderr, CONSOLE_TEXT_RED, "FAILED TO OPEN OUTPUT FILE\n");
@@ -82,9 +92,6 @@ int run_ass (stack_t* cmd_stk, FILE* fp)
             }
         }
     }
-    /*stack_printf (cmd_stk, pr_double);
-    stack_printf (lbl_stk, pr_lbl);
-    stack_printf (defined_lbl_stk, pr_lbl);*/
     //проставляем адреса в джампах
     size_t jmp_count = stack_size (lbl_stk);
     size_t lbl_count = stack_size (defined_lbl_stk);

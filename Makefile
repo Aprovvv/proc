@@ -9,14 +9,14 @@ PROC_SOURCES = processor.cpp ass_funcs.cpp proc_funcs.cpp cmds.cpp stack.cpp col
 ASS_SOURCES = assembler.cpp ass_funcs.cpp proc_funcs.cpp cmds.cpp stack.cpp color_print/color_print.cpp
 
 PROC_D_OBJECTS=$(addprefix debug_object_files/,$(notdir $(PROC_SOURCES:.cpp=.o)))
-PROC_OBJECTS=$(addprefix release_object_files/,$(notdir $(PROC_SOURCES:.cpp=.o)))
+PROC_R_OBJECTS=$(addprefix release_object_files/,$(notdir $(PROC_SOURCES:.cpp=.o)))
 ASS_D_OBJECTS=$(addprefix debug_object_files/,$(notdir $(ASS_SOURCES:.cpp=.o)))
-ASS_OBJECTS=$(addprefix release_object_files/,$(notdir $(ASS_SOURCES:.cpp=.o)))
+ASS_R_OBJECTS=$(addprefix release_object_files/,$(notdir $(ASS_SOURCES:.cpp=.o)))
 
 PROC_D_EXE=dproc
-PROC_EXE=proc
+PROC_R_EXE=proc
 ASS_D_EXE=dass
-ASS_EXE=ass
+ASS_R_EXE=ass
 
 dproc: $(PROC_SOURCES) $(PROC_D_EXE)
 $(PROC_D_EXE): $(PROC_D_OBJECTS)
@@ -40,3 +40,21 @@ clean:
 	rm -rf *.o
 	rm -rf debug_object_files/*.o
 	rm -rf release_object_files/*.o
+
+proc: $(PROC_SOURCES) $(PROC_R_EXE)
+$(PROC_R_EXE): $(PROC_R_OBJECTS)
+	$(CC) $(PROC_R_FLAGS) $(PROC_R_OBJECTS) -o $@
+
+release_object_files/%.o: %.cpp
+	$(CC) -c $(PROC_R_FLAGS) $< -o $@
+release_object_files/%.o: color_print/%.cpp
+	$(CC) -c $(PROC_R_FLAGS) $< -o $@
+
+ass: $(ASS_SOURCES) $(ASS_R_EXE)
+$(ASS_R_EXE): $(ASS_R_OBJECTS)
+	$(CC) $(ASS_R_FLAGS) $(ASS_R_OBJECTS) -o $@
+
+release_object_files/%.o: %.cpp
+	$(CC) -c $(ASS_R_FLAGS) $< -o $@
+release_object_files/%.o: color_print/%.cpp
+	$(CC) -c $(ASS_R_FLAGS) $< -o $@
