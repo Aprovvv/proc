@@ -240,6 +240,27 @@ int ass_draw (stack_t* stk, FILE* fp, stack_t* lbl_stk)
     return 0;
 }
 
+int ass_call (stack_t* stk, FILE* fp, stack_t* lbl_stk)
+{
+    label l = {"", stack_size (stk) + 1};
+    read_until_space (fp, l.name, CMD_LEN);
+    stack_push (lbl_stk, &l);
+
+    proc_elem_t call = CMD_CODE_CALL, minus_1 = -1;
+    stack_push (stk, &call);
+    stack_push (stk, &minus_1);
+
+    return 0;
+}
+
+int ass_ret (stack_t* stk, FILE* fp, stack_t* lbl_stk)
+{
+    proc_elem_t ret = CMD_CODE_RET;
+    stack_push (stk, &ret);
+
+    return 0;
+}
+
 int read_until_space (FILE* fp, char* dest, size_t n)
 {
     size_t i = 0;

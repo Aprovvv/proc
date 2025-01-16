@@ -23,6 +23,8 @@ int proc_je   (spu* proc);
 int proc_jme  (spu* proc);
 int proc_sqrt (spu* proc);
 int proc_sin  (spu* proc);
-int proc_draw  (spu* proc);
+int proc_draw (spu* proc);
+int proc_call (spu* proc);
+int proc_ret  (spu* proc);
 
 #endif

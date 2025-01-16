@@ -8,11 +8,17 @@
 #include "color_print/color_print.h"
 
 static int pr_double (const void* a);
+static int pr_size_t (const void* a);
 static int dblcmp (proc_elem_t a, proc_elem_t b);
 
 static int pr_double (const void* p)
 {
     return fprintf (stderr, "%f", *((const double*)p));
+}
+
+static int pr_size_t (const void* p)
+{
+    return fprintf (stderr, "%zu", *((const size_t*)p));
 }
 
 int proc_hlt (spu* proc)
@@ -259,6 +265,22 @@ int proc_draw (spu* proc)
         }
         fputc('\n', stdout);
     }
+
+    return 0;
+}
+
+int proc_call (spu* proc)
+{
+    proc->ip++;
+    stack_push (proc->funcs_stk, &proc->ip);
+    proc->ip = (size_t) proc->code [proc->ip];
+
+    return 0;
+}
+
+int proc_ret (spu* proc)
+{
+    stack_pop (proc->funcs_stk, &proc->ip);
 
     return 0;
 }
