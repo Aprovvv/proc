@@ -74,10 +74,9 @@ int run_ass (stack_t* cmd_stk, FILE* fp)
         {
             if (cmd[strlen(cmd) - 1] == ':')
             {
-                label l = {"", stack_size (cmd_stk)};
+                label l = {"", stack_size (cmd_stk) - 1};
                 strncpy (l.name, cmd, strlen(cmd) - 1);
                 proc_elem_t lbl_code = CMD_CODE_LBL;
-                stack_push (cmd_stk, &lbl_code);//TODO: а может убрать метку из машинного кода?
                 stack_push (defined_lbl_stk, &l);
             }
             else

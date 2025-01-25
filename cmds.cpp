@@ -15,7 +15,7 @@ extern const command cmd_list[] =
     DEFCMD(sub, CMD_CODE_SUB),
     DEFCMD(mult, CMD_CODE_MULT),
     DEFCMD(div, CMD_CODE_DIV),
-    {"", ass_lbl, proc_lbl, CMD_CODE_LBL},
+    {"", ass_lbl, NULL, CMD_CODE_LBL},
     DEFCMD(jmp, CMD_CODE_JMP),
     DEFCMD(ja, CMD_CODE_JA),
     DEFCMD(jae, CMD_CODE_JAE),
