@@ -235,7 +235,12 @@ int ass_sin (stack_t* stk, FILE* fp, stack_t* lbl_stk)
 int ass_draw (stack_t* stk, FILE* fp, stack_t* lbl_stk)
 {
     proc_elem_t code = CMD_CODE_DRAW;
+    proc_elem_t width = 0, height = 0;
+    fscanf (fp, "%lf%lf", &width, &height);
+
     stack_push (stk, &code);
+    stack_push (stk, &width);
+    stack_push (stk, &height);
 
     return 0;
 }

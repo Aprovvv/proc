@@ -239,11 +239,20 @@ int proc_sin (spu* proc)
 
 int proc_draw (spu* proc)
 {
-    for (int y = 0; y < 32; y++)
+    size_t width = 0, height = 0;
+    width = (size_t) proc->code [++proc->ip];
+    height = (size_t) proc->code [++proc->ip];
+    fprintf (stderr, "w = %d, h = %d\n", width, height);
+    if (width*height > proc->ram_size)
     {
-        for (int x = 0; x < 32; x++)
+        fprintf_color (stderr, CONSOLE_TEXT_RED, "ERROR: RAM SIZE IS NOT ENOUGH\n");
+        return 1;//такая ошибка завершает программу. Или лучше, чтобы она игнорировалась?
+    }
+    for (size_t y = 0; y < height; y++)
+    {
+        for (size_t x = 0; x < width; x++)
         {
-            fputc((int)proc->ram[32*y + x], stdout);
+            fputc((int)proc->ram[width*y + x], stdout);
             fputc(' ', stdout);
         }
         fputc('\n', stdout);
