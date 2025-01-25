@@ -58,6 +58,8 @@ int run_ass (stack_t* cmd_stk, FILE* fp)
     stack_t* lbl_stk = stack_init (sizeof (label), 4);
     stack_t* defined_lbl_stk = stack_init (sizeof (label), 4);
 
+    proc_elem_t zero = 0;
+    stack_push (cmd_stk, &zero);
     while (read_until_space (fp, cmd, CMD_LEN) != EOF)
     {
         //1 проход

@@ -12,6 +12,10 @@ static int get_type (char* arg_str,
                           proc_elem_t* type,
                           proc_elem_t* arg_num,
                           proc_elem_t* arg_reg);
+static int universal_jmp (stack_t* stk,
+                          FILE* fp,
+                          stack_t* lbl_stk,
+                          proc_elem_t jmp_code);
 
 static size_t get_reg_num (const char* reg_name);
 
@@ -127,91 +131,49 @@ int ass_lbl (stack_t* stk, FILE* fp, stack_t* lbl_stk)
 
 int ass_jmp (stack_t* stk, FILE* fp, stack_t* lbl_stk)
 {
-    label l = {"", stack_size (stk) + 1};
-    read_until_space (fp, l.name, CMD_LEN);
-    stack_push (lbl_stk, &l);
-
-    proc_elem_t jmp = CMD_CODE_JMP, minus_1 = -1;
-    stack_push (stk, &jmp);
-    stack_push (stk, &minus_1);
+    universal_jmp (stk, fp, lbl_stk, CMD_CODE_JMP);
 
     return 0;
 }
 
 int ass_ja (stack_t* stk, FILE* fp, stack_t* lbl_stk)
 {
-    label l = {"", stack_size (stk) + 1};
-    read_until_space (fp, l.name, CMD_LEN);
-    stack_push (lbl_stk, &l);
-
-    proc_elem_t jmp = CMD_CODE_JA, minus_1 = -1;
-    stack_push (stk, &jmp);
-    stack_push (stk, &minus_1);
+    universal_jmp (stk, fp, lbl_stk, CMD_CODE_JA);
 
     return 0;
 }
 
 int ass_jae (stack_t* stk, FILE* fp, stack_t* lbl_stk)
 {
-    label l = {"", stack_size (stk) + 1};
-    read_until_space (fp, l.name, CMD_LEN);
-    stack_push (lbl_stk, &l);
-
-    proc_elem_t jmp = CMD_CODE_JAE, minus_1 = -1;
-    stack_push (stk, &jmp);
-    stack_push (stk, &minus_1);
+    universal_jmp (stk, fp, lbl_stk, CMD_CODE_JAE);
 
     return 0;
 }
 
 int ass_jb (stack_t* stk, FILE* fp, stack_t* lbl_stk)
 {
-    label l = {"", stack_size (stk) + 1};
-    read_until_space (fp, l.name, CMD_LEN);
-    stack_push (lbl_stk, &l);
-
-    proc_elem_t jmp = CMD_CODE_JB, minus_1 = -1;
-    stack_push (stk, &jmp);
-    stack_push (stk, &minus_1);
+    universal_jmp (stk, fp, lbl_stk, CMD_CODE_JB);
 
     return 0;
 }
 
 int ass_jbe (stack_t* stk, FILE* fp, stack_t* lbl_stk)
 {
-    label l = {"", stack_size (stk) + 1};
-    read_until_space (fp, l.name, CMD_LEN);
-    stack_push (lbl_stk, &l);
-
-    proc_elem_t jmp = CMD_CODE_JBE, minus_1 = -1;
-    stack_push (stk, &jmp);
-    stack_push (stk, &minus_1);
+    universal_jmp (stk, fp, lbl_stk, CMD_CODE_JBE);
 
     return 0;
 }
 
 int ass_je (stack_t* stk, FILE* fp, stack_t* lbl_stk)
 {
-    label l = {"", stack_size (stk) + 1};
-    read_until_space (fp, l.name, CMD_LEN);
-    stack_push (lbl_stk, &l);
-
-    proc_elem_t jmp = CMD_CODE_JE, minus_1 = -1;
-    stack_push (stk, &jmp);
-    stack_push (stk, &minus_1);
+    universal_jmp (stk, fp, lbl_stk, CMD_CODE_JE);
 
     return 0;
 }
 
 int ass_jme (stack_t* stk, FILE* fp, stack_t* lbl_stk)
 {
-    label l = {"", stack_size (stk) + 1};
-    read_until_space (fp, l.name, CMD_LEN);
-    stack_push (lbl_stk, &l);
-
-    proc_elem_t jmp = CMD_CODE_JME, minus_1 = -1;
-    stack_push (stk, &jmp);
-    stack_push (stk, &minus_1);
+    universal_jmp (stk, fp, lbl_stk, CMD_CODE_JME);
 
     return 0;
 }
@@ -277,6 +239,22 @@ int read_until_space (FILE* fp, char* dest, size_t n)
     }
     dest[i] = '\0';
     return ch;
+}
+
+static int universal_jmp (stack_t* stk,
+                          FILE* fp,
+                          stack_t* lbl_stk,
+                          proc_elem_t jmp_code)
+{
+    label l = {"", stack_size (stk) + 1};
+    read_until_space (fp, l.name, CMD_LEN);
+    stack_push (lbl_stk, &l);
+
+    proc_elem_t minus_1 = -1;
+    stack_push (stk, &jmp_code);
+    stack_push (stk, &minus_1);
+
+    return 0;
 }
 
 static int get_type (char* arg_str,

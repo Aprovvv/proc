@@ -27,7 +27,7 @@ int main (int argc, char* argv[])
     if (memcmp (&proc, &empty_struct, sizeof (spu)) == 0)
         exit(EXIT_FAILURE);
 
-    for (proc.ip = 0; proc.ip < proc.code_size; proc.ip++)
+    for (proc.ip = 1; proc.ip < proc.code_size; proc.ip++)
     {
         for (size_t i = 0; i < cmd_count; i++)
         {
@@ -47,6 +47,7 @@ static spu proc_init (const char* filename)
 {
     spu proc = {0};
 
+    proc.ip = 1;
     proc.main_stk = stack_init (sizeof (proc_elem_t), 20);
     proc.funcs_stk = stack_init (sizeof (size_t), 8);
     proc.ram_size = 1024;
