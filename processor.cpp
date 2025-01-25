@@ -12,6 +12,7 @@
 
 static spu proc_init (const char* filename);
 static void proc_destroy (spu proc);
+static int read_code (spu* proc, const char* filename);
 
 int main (int argc, char* argv[])
 {
@@ -20,8 +21,6 @@ int main (int argc, char* argv[])
         fprintf_color(stderr, CONSOLE_TEXT_RED, "FILE NAME NOT SPECIFIED\n");
         exit(EXIT_FAILURE);
     }
-
-    //freopen ("log.txt", "w", stderr);
 
     spu proc = proc_init(argv[1]);
     spu empty_struct = {0};
@@ -48,31 +47,60 @@ static spu proc_init (const char* filename)
 {
     spu proc = {0};
 
-    FILE* fp = fopen (filename, "r");
-    if (fp == NULL)
-    {
-        fprintf_color(stderr, CONSOLE_TEXT_RED, "FAILED TO OPEN INPUT FILE\n");
-        return proc;
-    }
-    struct stat filedata = {};
-    stat (filename, &filedata);
-
     proc.main_stk = stack_init (sizeof (proc_elem_t), 20);
     proc.funcs_stk = stack_init (sizeof (size_t), 8);
     proc.ram_size = 1024;
     proc.ram = (proc_elem_t*) calloc (sizeof (proc_elem_t), proc.ram_size);
-    proc.code_size = (size_t) filedata.st_size;
-    proc.code = (proc_elem_t*) calloc (sizeof (proc_elem_t), proc.code_size);
-    fread (proc.code, sizeof (proc_elem_t), proc.code_size, fp);
+    if (proc.ram == NULL)
+    {
+        fprintf_color(stderr, CONSOLE_TEXT_RED,
+                      "FAILED TO ALLOCATE MEMORY FOR RAM\n");
+        goto init_failure;
+    }
+    if (read_code (&proc, filename) == EXIT_FAILURE)
+        goto init_failure;
+
+    return proc;
+init_failure:
+    proc_destroy (proc);
+    proc = {0};
+    return proc;
+}
+
+static int read_code (spu* proc, const char* filename)
+{
+    FILE* fp = fopen (filename, "r");
+    if (fp == NULL)
+    {
+        fprintf_color(stderr, CONSOLE_TEXT_RED,
+                      "FAILED TO OPEN INPUT FILE\n");
+        return EXIT_FAILURE;
+    }
+    struct stat filedata = {};
+    stat (filename, &filedata);
+
+    proc->code_size = (size_t) filedata.st_size;
+    proc->code = (proc_elem_t*) calloc (sizeof (proc_elem_t), proc->code_size);
+    if (proc->code == NULL)
+    {
+        fprintf_color(stderr, CONSOLE_TEXT_RED,
+                      "FAILED TO ALLOCATE MEMORY FOR MACHINE CODE\n");
+        return EXIT_FAILURE;
+    }
+    fread (proc->code, sizeof (proc_elem_t), proc->code_size, fp);
 
     fclose (fp);
-    return proc;
+    return 0;
 }
 
 static void proc_destroy (spu proc)
 {
-    stack_destroy (proc.main_stk);
-    stack_destroy (proc.funcs_stk);
-    free (proc.ram);
-    free (proc.code);
+    if (proc.main_stk)
+        stack_destroy (proc.main_stk);
+    if (proc.funcs_stk)
+        stack_destroy (proc.funcs_stk);
+    if (proc.ram)
+        free (proc.ram);
+    if (proc.code)
+        free (proc.code);
 }

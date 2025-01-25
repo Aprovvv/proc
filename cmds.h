@@ -53,7 +53,6 @@ enum PUSH_MASKS
     MASK_MINUS     = 0x8,
     MASK_STAR      = 0x10,
     MASK_MEM       = 0x20,
-    MASK_REG_MEM   = 0x40,
 };
 
 struct command {
