@@ -1,0 +1,55 @@
+push 0
+pop bx
+
+cycle_y:
+
+push 0
+pop ax
+
+cycle_x:
+
+push -10+ax
+push -10+ax
+mult
+push -8+bx
+push -8+bx
+mult
+sum
+sqrt
+push 8
+jae out_circle
+push 88
+push 20*bx
+push ax
+sum
+pop cx
+pop [cx]
+jmp next
+
+out_circle:
+
+push 32
+push 20*bx
+push ax
+sum
+pop cx
+pop [cx]
+
+next:
+
+push 1+ax
+pop ax
+
+push 20
+push ax
+ja cycle_x
+
+push 1+bx
+pop bx
+
+push 16
+push bx
+ja cycle_y
+
+draw 20 16
+hlt

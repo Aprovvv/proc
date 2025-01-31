@@ -1,0 +1,25 @@
+in
+pop ax
+call fact
+out
+hlt
+
+fact:
+push 0
+push ax
+je one
+
+push 1
+push ax
+je one
+
+push ax
+push -1+ax
+pop ax
+call fact
+mult
+ret
+
+one:
+push 1
+ret

@@ -1,0 +1,81 @@
+in
+in
+in
+pop cx
+pop bx
+pop ax
+
+push 0
+push ax
+je a_zero
+jmp quad
+
+quad:
+push bx
+push bx
+mult
+push 4
+push ax
+mult
+push cx
+mult
+sub
+pop dx
+push dx
+push 0
+jb no
+push dx
+push 0
+je one
+
+push 0-bx
+push dx
+sqrt
+sum
+push 2*ax
+div
+
+push 0-bx
+push dx
+sqrt
+sub
+push 2*ax
+div
+out
+out
+hlt
+
+one:
+push 0-bx
+push 2*ax
+div
+out
+hlt
+
+linear:
+push 0-cx
+push bx
+div
+out
+hlt
+
+a_zero:
+push 0
+push bx
+je b_zero
+jmp linear
+
+b_zero:
+push 0
+push cx
+je any
+
+no:
+push 666
+out
+hlt
+
+any:
+push 52
+out
+hlt
